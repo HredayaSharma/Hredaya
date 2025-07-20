@@ -1,0 +1,674 @@
+import { useState, useEffect } from 'react';
+
+export default function App() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  
+  const [activeTab, setActiveTab] = useState('features');
+  
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+  
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailError('');
+  };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+    
+    // Simulate successful submission
+    setSubmitted(true);
+    setTimeout(() => {
+      setSubmitted(false);
+      setEmail('');
+    }, 3000);
+  };
+
+  return (
+    <div className={`min-h-screen text-white ${isDarkMode ? 'bg-black' : 'bg-gray-100 text-gray-900'} font-sans overflow-x-hidden transition-colors duration-300`}>
+      {/* Background effects */}
+      <div className="fixed inset-0 z-0">
+        {/* Animated gradient background */}
+        <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-br from-purple-900 via-black to-blue-900 opacity-50' : 'bg-gradient-to-br from-purple-100 via-white to-blue-100 opacity-50'}`}></div>
+        
+        {/* Floating particles */}
+        <div className="absolute inset-0">
+          {[...Array(50)].map((_, i) => (
+            <div 
+              key={i}
+              className={`absolute rounded-full ${isDarkMode ? 'bg-cyan-400 opacity-20' : 'bg-blue-500 opacity-10'} animate-pulse`}
+              style={{
+                width: `${Math.random() * 10 + 5}px`,
+                height: `${Math.random() * 10 + 5}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animationDuration: `${Math.random() * 5 + 3}s`,
+                animationDelay: `${Math.random() * 5}s`
+              }}
+            ></div>
+          ))}
+        </div>
+        
+        {/* Cursor trail */}
+        <div 
+          className={`fixed w-32 h-32 rounded-full ${isDarkMode ? 'mix-blend-screen bg-cyan-400 opacity-20 blur-xl' : 'mix-blend-screen bg-blue-300 opacity-10 blur-xl'} transition-transform duration-300 ease-out`}
+          style={{
+            transform: `translate(${mousePosition.x - 64}px, ${mousePosition.y - 64}px)`
+          }}
+        ></div>
+      </div>
+      
+      {/* Navigation */}
+      <nav className={`fixed top-0 left-0 right-0 z-20 backdrop-blur-md ${isDarkMode ? 'bg-black/30 border-b border-cyan-400/20' : 'bg-white/80 border-b border-blue-200'}`}>
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <div className={`w-8 h-8 ${isDarkMode ? 'bg-gradient-to-br from-cyan-400 to-purple-500' : 'bg-gradient-to-br from-blue-400 to-indigo-500'} rounded-lg flex items-center justify-center`}>
+              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+              </svg>
+            </div>
+            <span className={`text-xl font-bold bg-clip-text text-transparent ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500'}`}>
+              TradeFuturix
+            </span>
+          </div>
+          
+          <div className="hidden md:flex items-center space-x-6">
+            <a href="#features" className="relative group">
+              <span className="text-sm font-medium hover:text-cyan-400 transition-colors">Features</span>
+              <span className={`absolute left-0 bottom-0 w-0 h-0.5 ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400 group-hover:w-full' : 'bg-gradient-to-r from-blue-500 to-indigo-500 group-hover:w-full'} transition-all duration-300`}></span>
+            </a>
+            <a href="#courses" className="relative group">
+              <span className="text-sm font-medium hover:text-cyan-400 transition-colors">Courses</span>
+              <span className={`absolute left-0 bottom-0 w-0 h-0.5 ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400 group-hover:w-full' : 'bg-gradient-to-r from-blue-500 to-indigo-500 group-hover:w-full'} transition-all duration-300`}></span>
+            </a>
+            <a href="#testimonials" className="relative group">
+              <span className="text-sm font-medium hover:text-cyan-400 transition-colors">Testimonials</span>
+              <span className={`absolute left-0 bottom-0 w-0 h-0.5 ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400 group-hover:w-full' : 'bg-gradient-to-r from-blue-500 to-indigo-500 group-hover:w-full'} transition-all duration-300`}></span>
+            </a>
+            <a href="#pricing" className="relative group">
+              <span className="text-sm font-medium hover:text-cyan-400 transition-colors">Pricing</span>
+              <span className={`absolute left-0 bottom-0 w-0 h-0.5 ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400 group-hover:w-full' : 'bg-gradient-to-r from-blue-500 to-indigo-500 group-hover:w-full'} transition-all duration-300`}></span>
+            </a>
+            <a href="#contact" className="relative group">
+              <span className="text-sm font-medium hover:text-cyan-400 transition-colors">Contact</span>
+              <span className={`absolute left-0 bottom-0 w-0 h-0.5 ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400 group-hover:w-full' : 'bg-gradient-to-r from-blue-500 to-indigo-500 group-hover:w-full'} transition-all duration-300`}></span>
+            </a>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`p-2 rounded-full ${isDarkMode ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-200 hover:bg-gray-300'} transition-colors`}
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? (
+                <svg className="w-5 h-5 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1111.21 3 9 9 0 0021 12.79z"></path>
+                </svg>
+              )}
+            </button>
+            <button className={`hidden md:block px-5 py-2 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400'} text-white font-medium transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/20' : 'hover:shadow-blue-500/20'} transform hover:-translate-y-0.5`}>
+              Start Free Trial
+            </button>
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`md:hidden p-2 rounded-lg ${isDarkMode ? 'hover:bg-white/10' : 'hover:bg-gray-200'} transition-colors`}
+            >
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {isMenuOpen ? (
+                  <path d="M18 6L6 18M6 6l12 12"></path>
+                ) : (
+                  <path d="M3 12h18M3 6h18M3 18h18"></path>
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className={`md:hidden ${isDarkMode ? 'bg-black/80 backdrop-blur-md border-t border-cyan-400/20' : 'bg-white/90 backdrop-blur-md border-t border-blue-200'}`}>
+            <div className="container mx-auto px-4 py-4 flex flex-col space-y-3">
+              <a href="#features" className="py-2 text-sm font-medium hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>Features</a>
+              <a href="#courses" className="py-2 text-sm font-medium hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>Courses</a>
+              <a href="#testimonials" className="py-2 text-sm font-medium hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>Testimonials</a>
+              <a href="#pricing" className="py-2 text-sm font-medium hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>Pricing</a>
+              <a href="#contact" className="py-2 text-sm font-medium hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a>
+              <button className={`mt-2 px-5 py-2 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white' : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white'} font-medium transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/20' : 'hover:shadow-blue-500/20'}`}>
+                Start Free Trial
+              </button>
+            </div>
+          </div>
+        )}
+      </nav>
+      
+      {/* Hero Section */}
+      <section className={`relative pt-24 pb-20 md:pt-32 md:pb-36 ${isDarkMode ? 'overflow-hidden' : ''}`}>
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
+              Master Trading in the <span className="relative inline-block">
+                <span className="relative z-10">Futuristic</span>
+                <span className={`absolute -bottom-2 left-0 w-full h-3 ${isDarkMode ? 'bg-blue-500/30 blur-sm' : 'bg-blue-300/30 blur-sm'}`}></span>
+              </span> Era
+            </h1>
+            <p className={`text-lg md:text-xl ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-10`}>
+              Unlock the secrets of cryptocurrency and stock trading with our cutting-edge course. Learn from industry experts and start earning in just 7 days!
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <button className={`px-8 py-4 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400'} text-white font-medium text-lg transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/20' : 'hover:shadow-blue-500/20'} transform hover:-translate-y-1`}>
+                Start Free Trial
+              </button>
+              <button className={`px-8 py-4 rounded-full ${isDarkMode ? 'bg-black/50 border border-cyan-400/30 hover:bg-white/10' : 'bg-white/50 border border-blue-300 hover:bg-gray-100/80'} ${isDarkMode ? 'text-white' : 'text-gray-800'} font-medium text-lg transition-all duration-300`}>
+                Watch Demo
+              </button>
+            </div>
+          </div>
+          
+          {/* 3D floating elements */}
+          <div className="mt-20 relative">
+            <div className={`absolute -top-10 -left-10 w-40 h-40 ${isDarkMode ? 'bg-gradient-to-br from-cyan-500/20 to-purple-500/20' : 'bg-gradient-to-br from-blue-400/20 to-indigo-500/20'} rounded-2xl backdrop-blur-sm transform rotate-12 animate-pulse`}></div>
+            <div className={`absolute -bottom-10 -right-10 w-32 h-32 ${isDarkMode ? 'bg-gradient-to-br from-blue-500/20 to-purple-500/20' : 'bg-gradient-to-br from-blue-400/20 to-indigo-400/20'} rounded-2xl backdrop-blur-sm transform -rotate-12 animate-pulse`} style={{animationDelay: '1s'}}></div>
+            
+            <div className="relative">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className={`group p-6 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-xl hover:border-cyan-400/50 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/10' : 'hover:shadow-blue-500/10'}`}>
+                  <div className={`w-12 h-12 ${isDarkMode ? 'bg-gradient-to-br from-cyan-500 to-purple-500' : 'bg-gradient-to-br from-blue-500 to-indigo-500'} rounded-lg flex items-center justify-center mb-4`}>
+                    <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                      <path d="M2 17l10 5 10-5"></path>
+                      <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Crypto Trading</h3>
+                  <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
+                    Learn to trade Bitcoin, Ethereum, and other cryptocurrencies with advanced strategies.
+                  </p>
+                </div>
+                <div className={`group p-6 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-xl hover:border-cyan-400/50 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/10' : 'hover:shadow-blue-500/10'}`}>
+                  <div className={`w-12 h-12 ${isDarkMode ? 'bg-gradient-to-br from-blue-500 to-purple-500' : 'bg-gradient-to-br from-blue-600 to-indigo-600'} rounded-lg flex items-center justify-center mb-4`}>
+                    <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Stock Trading</h3>
+                  <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
+                    Master the art of stock market trading with our comprehensive curriculum.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Features Section */}
+      <section id="features" className={`relative py-20 ${isDarkMode ? 'bg-black/30 backdrop-blur-sm' : 'bg-gray-50'}`}>
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500'}`}>
+              Why Choose TradeFuturix?
+            </h2>
+            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+              Our course offers cutting-edge technology and expert instruction to help you become a successful trader.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Interactive Learning",
+                description: "Engage with our AI-powered learning platform that adapts to your progress and provides real-time feedback.",
+                icon: (
+                  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                )
+              },
+              {
+                title: "Live Market Data",
+                description: "Access real-time market data and simulate trading with our advanced platform that mirrors real-world conditions.",
+                icon: (
+                  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                  </svg>
+                )
+              },
+              {
+                title: "Expert Mentors",
+                description: "Learn from industry experts with decades of trading experience across various market conditions.",
+                icon: (
+                  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <line x1="21.17" y1="8" x2="12" y2="8"></line>
+                    <line x1="21.17" y1="16" x2="12" y2="16"></line>
+                    <line x1="8" y1="4.83" x2="8" y2="12"></line>
+                    <line x1="4" y1="16" x2="12" y2="16"></line>
+                  </svg>
+                )
+              }
+            ].map((feature, index) => (
+              <div 
+                key={index}
+                className={`group p-6 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-xl hover:border-cyan-400/50 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/10' : 'hover:shadow-blue-500/10'}`}
+              >
+                <div className={`w-14 h-14 ${isDarkMode ? 'bg-gradient-to-br from-cyan-500 to-purple-500' : 'bg-gradient-to-br from-blue-500 to-indigo-500'} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Course Details Section */}
+      <section id="courses" className="relative py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500'}`}>
+              What You'll Learn
+            </h2>
+            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+              Our comprehensive course covers all aspects of trading, from fundamentals to advanced strategies.
+            </p>
+          </div>
+          
+          <div className="relative">
+            {/* Timeline line */}
+            <div className={`absolute left-1/2 transform -translate-x-1/2 h-full w-1 ${isDarkMode ? 'bg-gradient-to-b from-cyan-500 to-purple-500' : 'bg-gradient-to-b from-blue-500 to-indigo-500'}`}></div>
+            
+            <div className="relative">
+              {[
+                {
+                  title: "Week 1: Foundations",
+                  description: "Introduction to trading, market psychology, and basic strategies. Learn about different market types and how to read charts.",
+                  isLeft: true
+                },
+                {
+                  title: "Week 2: Technical Analysis",
+                  description: "Master technical indicators, candlestick patterns, and chart patterns. Learn to identify support and resistance levels.",
+                  isLeft: false
+                },
+                {
+                  title: "Week 3: Risk Management",
+                  description: "Understand position sizing, stop loss placement, and portfolio diversification. Learn to manage emotions and maintain discipline.",
+                  isLeft: true
+                },
+                {
+                  title: "Week 4: Advanced Strategies",
+                  description: "Explore advanced trading strategies, including options trading, arbitrage, and algorithmic trading techniques.",
+                  isLeft: false
+                }
+              ].map((item, index) => (
+                <div key={index} className="mb-16">
+                  <div className={`flex ${item.isLeft ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`w-full ${item.isLeft ? 'md:w-5/12 md:pr-8' : 'md:w-5/12 md:pl-8'}`}>
+                      <div className={`p-6 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-xl ${isDarkMode ? 'hover:border-cyan-400/50' : 'hover:border-blue-400/50'} transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/10' : 'hover:shadow-blue-500/10'} transform hover:-translate-y-1`}>
+                        <div className={`w-10 h-10 ${isDarkMode ? 'bg-gradient-to-br from-cyan-500 to-purple-500' : 'bg-gradient-to-br from-blue-500 to-indigo-500'} rounded-full flex items-center justify-center mb-4`}>
+                          <span className="text-white font-bold">{index + 1}</span>
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                        <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>{item.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Timeline dot */}
+                  <div className={`absolute left-1/2 transform -translate-x-1/2 w-6 h-6 ${isDarkMode ? 'bg-gradient-to-br from-cyan-500 to-purple-500' : 'bg-gradient-to-br from-blue-500 to-indigo-500'} rounded-full border-4 border-black z-10`}></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Testimonials Section */}
+      <section id="testimonials" className={`relative py-20 ${isDarkMode ? 'bg-black/30 backdrop-blur-sm' : 'bg-gray-50'}`}>
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500'}`}>
+              What Our Students Say
+            </h2>
+            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+              Join thousands of successful traders who have transformed their financial future with TradeFuturix.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Alex Johnson",
+                role: "Full-time Trader",
+                avatar: "https://picsum.photos/seed/1/200/200 ",
+                quote: "TradeFuturix completely changed my life. I went from losing money to making consistent profits within weeks!"
+              },
+              {
+                name: "Samantha Lee",
+                role: "Investment Analyst",
+                avatar: "https://picsum.photos/seed/2/200/200 ",
+                quote: "The course material is top-notch. I've taken many trading courses, but this one stands out with its practical approach."
+              },
+              {
+                name: "Michael Chen",
+                role: "Entrepreneur",
+                avatar: "https://picsum.photos/seed/3/200/200 ",
+                quote: "I was skeptical at first, but the mentors are truly experts in their field. I've never seen such detailed market analysis."
+              }
+            ].map((testimonial, index) => (
+              <div 
+                key={index}
+                className={`p-6 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-xl ${isDarkMode ? 'hover:border-cyan-400/50' : 'hover:border-blue-400/50'} transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/10' : 'hover:shadow-blue-500/10'} transform hover:-translate-y-1`}
+              >
+                <div className="flex items-center mb-4">
+                  <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover mr-4" />
+                  <div>
+                    <h3 className="font-bold">{testimonial.name}</h3>
+                    <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>{testimonial.role}</p>
+                  </div>
+                </div>
+                <p className={`italic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  "{testimonial.quote}"
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Pricing Section */}
+      <section id="pricing" className="relative py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500'}`}>
+              Pricing Plans
+            </h2>
+            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+              Choose the plan that best fits your trading goals and start your journey today.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Free Trial Card */}
+            <div className={`relative p-8 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-xl transition-all duration-300 hover:border-cyan-400/50 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/10' : 'hover:shadow-blue-500/10'} transform hover:-translate-y-1`}>
+              <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 ${isDarkMode ? 'bg-gradient-to-r from-cyan-500 to-purple-500' : 'bg-gradient-to-r from-blue-500 to-indigo-500'} px-6 py-2 rounded-full text-white text-sm font-medium`}>
+                Free Trial
+              </div>
+              <h3 className="text-2xl font-bold mb-4">1 Week Trial</h3>
+              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>Perfect for beginners to experience the course before committing.</p>
+              <div className="mb-8">
+                <span className="text-4xl font-bold">$0</span>
+                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>/week</span>
+              </div>
+              <ul className="space-y-3 mb-8">
+                {[
+                  "Access to basic course materials",
+                  "Limited mentor support",
+                  "1 live trading session",
+                  "Basic market analysis tools"
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-center">
+                    <svg className={`w-5 h-5 ${isDarkMode ? 'text-cyan-400' : 'text-blue-500'} mr-2`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <button className={`w-full py-3 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400'} text-white font-medium transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/20' : 'hover:shadow-blue-500/20'} transform hover:-translate-y-1`}>
+                Start Free Trial
+              </button>
+            </div>
+            
+            {/* Premium Plan Card */}
+            <div className={`relative p-8 ${isDarkMode ? 'bg-gradient-to-br from-purple-900/50 to-black border border-cyan-400/30' : 'bg-gradient-to-br from-blue-50 to-white border border-blue-300'} rounded-xl transition-all duration-300 hover:border-cyan-400/70 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/20' : 'hover:shadow-blue-500/20'} transform hover:-translate-y-1`}>
+              <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 ${isDarkMode ? 'bg-gradient-to-r from-yellow-500 to-amber-500' : 'bg-gradient-to-r from-yellow-400 to-amber-400'} px-6 py-2 rounded-full text-white text-sm font-medium`}>
+                Most Popular
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Premium Plan</h3>
+              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>Complete access to all course materials and features for serious traders.</p>
+              <div className="mb-8">
+                <span className="text-4xl font-bold">$199</span>
+                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>/month</span>
+              </div>
+              <ul className="space-y-3 mb-8">
+                {[
+                  "Full access to all course materials",
+                  "Unlimited mentor support",
+                  "10+ live trading sessions",
+                  "Advanced market analysis tools",
+                  "Trading bot development course",
+                  "Private community access"
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-center">
+                    <svg className={`w-5 h-5 ${isDarkMode ? 'text-cyan-400' : 'text-blue-500'} mr-2`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <button className={`w-full py-3 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400'} text-white font-medium transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/20' : 'hover:shadow-blue-500/20'} transform hover:-translate-y-1`}>
+                Purchase Course
+              </button>
+            </div>
+          </div>
+          
+          <div className="mt-12 text-center">
+            <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
+              Want to discuss custom plans for your team or organization? <a href="#contact" className={isDarkMode ? 'text-cyan-400 hover:text-cyan-300' : 'text-blue-500 hover:text-blue-600'}>Contact us</a> for enterprise solutions.
+            </p>
+          </div>
+        </div>
+      </section>
+      
+      {/* Contact Section */}
+      <section id="contact" className={`relative py-20 ${isDarkMode ? 'bg-black/30 backdrop-blur-sm' : 'bg-gray-50'}`}>
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500'}`}>
+              Get in Touch
+            </h2>
+            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+              Have questions about our course or need help getting started? We're here to help!
+            </p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div>
+                <h3 className="text-xl font-bold mb-6">Contact Information</h3>
+                <div className="space-y-6">
+                  <div className="flex items-start">
+                    <div className={`w-10 h-10 ${isDarkMode ? 'bg-gradient-to-br from-cyan-500 to-purple-500' : 'bg-gradient-to-br from-blue-500 to-indigo-500'} rounded-lg flex items-center justify-center mr-4 flex-shrink-0`}>
+                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13 9-13 9-13z"></path>
+                        <circle cx="12" cy="10" r="4"></circle>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="font-bold mb-1">Our Location</h4>
+                      <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>123 Futurix Trading Center<br />New York, NY 10001</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className={`w-10 h-10 ${isDarkMode ? 'bg-gradient-to-br from-cyan-500 to-purple-500' : 'bg-gradient-to-br from-blue-500 to-indigo-500'} rounded-lg flex items-center justify-center mr-4 flex-shrink-0`}>
+                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 13 19.79 13 19.79 6 19.79 6 19.79 13 19.79 13 19.79 8.63 19.79 6 19.79 3 19.79 3 19.79 4.22 19.79 5.64 19.79 7 19.79 7 19.79 12 19.79 12 19.79 12 19.79 16 19.79 16 19.79 12 19.79 12 19.79 12 19.79 9.83 19.79 8.41 19.79 7 19.79 7 19.79 2 19.79 2 19.79 2.18 19.79 3.6 19.79 5 19.79 5 19.79 12 19.79 12 19.79 12 19.79 18 19.79 18 19.79 18.18 19.79 19.6 19.79 21 19.79 21 19.79 21 16.92z"></path>
+                        <path d="M15 8.5h.01"></path>
+                        <path d="M11.5 15.5h.01"></path>
+                        <path d="M7.5 8.5h.01"></path>
+                        <path d="M9.5 15.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5 2.5-2.5 0-1-2.5z"></path>
+                        <path d="M12 12.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5 2.5-2.5 0-1-2.5z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="font-bold mb-1">Phone</h4>
+                      <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>+1 (555) 123-4567</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className={`w-10 h-10 ${isDarkMode ? 'bg-gradient-to-br from-cyan-500 to-purple-500'} rounded-lg flex items-center justify-center mr-4 flex-shrink-0`}>
+                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="font-bold mb-1">Email</h4>
+                      <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>hredayasaidawat@gmail.com</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-bold mb-6">Send Us a Message</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-1`}>Name</label>
+                    <input 
+                      type="text" 
+                      id="name"
+                      value={email}
+                      onChange={handleEmailChange}
+                      className={`w-full px-4 py-3 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400/50 text-white placeholder-gray-500 transition-all`}
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-1`}>Email</label>
+                    <input 
+                      type="email" 
+                      id="email"
+                      value={email}
+                      onChange={handleEmailChange}
+                      className={`w-full px-4 py-3 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400/50 text-white placeholder-gray-500 transition-all`}
+                      placeholder="Your email"
+                      required
+                    />
+                    {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="message" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-1`}>Message</label>
+                    <textarea 
+                      id="message"
+                      rows="5"
+                      className={`w-full px-4 py-3 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400/50 text-white placeholder-gray-500 transition-all`}
+                      placeholder="Your message"
+                    ></textarea>
+                  </div>
+                  <button 
+                    type="submit"
+                    className={`w-full py-3 rounded-lg ${isDarkMode ? 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400' : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400'} text-white font-medium transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'hover:shadow-cyan-500/20' : 'hover:shadow-blue-500/20'} transform hover:-translate-y-1`}
+                  >
+                    {submitted ? 'Sent!' : 'Send Message'}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Footer */}
+      <footer className={`relative py-12 ${isDarkMode ? 'bg-black border-t border-cyan-400/20' : 'bg-white border-t border-blue-200'}`}>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className={`w-8 h-8 ${isDarkMode ? 'bg-gradient-to-br from-cyan-400 to-purple-500' : 'bg-gradient-to-br from-blue-400 to-indigo-500'} rounded-lg flex items-center justify-center`}>
+                  <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                  </svg>
+                </div>
+                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">TradeFuturix</span>
+              </div>
+              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
+                Empowering traders with cutting-edge knowledge and futuristic trading strategies.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                {["Features", "Courses", "Testimonials", "Pricing", "Contact"].map((item, index) => (
+                  <li key={index}>
+                    <a href={`#${item.toLowerCase()}`} className={isDarkMode ? 'text-gray-400 hover:text-cyan-400' : 'text-gray-500 hover:text-blue-500'}>{item}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-bold mb-4">Legal</h3>
+              <ul className="space-y-2">
+                {["Terms of Service", "Privacy Policy", "Refund Policy", "Cookie Policy"].map((item, index) => (
+                  <li key={index}>
+                    <a href="#" className={isDarkMode ? 'text-gray-400 hover:text-cyan-400' : 'text-gray-500 hover:text-blue-500'}>{item}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-bold mb-4">Follow Us</h3>
+              <div className="flex space-x-4">
+                {["Twitter", "LinkedIn", "YouTube", "Discord"].map((platform, index) => (
+                  <a 
+                    key={index} 
+                    href="#" 
+                    className={`w-10 h-10 ${isDarkMode ? 'bg-black/40 border border-cyan-400/20' : 'bg-white/40 border border-blue-300'} rounded-lg flex items-center justify-center hover:bg-cyan-500/10 hover:border-cyan-400/50 transition-all`}
+                    aria-label={platform}
+                  >
+                    <svg className="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="currentColor">
+                      {platform === "Twitter" && (
+                        <path d="M23.953 4.57a10 10 0 0-2.825.775 4.959 2.163-2.005.959-3.127 1.184a4.92 4.92 0 0 2.163-.616 3.946-2.223c.951.555 2.005.959 3.127 1.184a4.904 4.904 0 0-2.212.085-4.384.238-6.498.446a4.996 4.996 0 0-6.102 2.105-12.222 2.105s-6.102 0-9.384-.238a13.995 13.995 0 0-6.102 2.105-12.222 2.105c-6.102 0-12.222-.238-18.334.238a13.995 13.995 0 0-6.102 2.105-12.222 2.105c-6.102 0-12.222-.238-18.334.238a13.995 13.995 0 0-6.102 2.105-12.222 2.105c-6.102 0-12.222-.238-18.334.238a13.995 13.995 0 0-6.102 2.105-12.222 2.105c-6.102 0-12.222-.238-18.334.238a13.995 13.995 0 0-6.102 2.105-12.222 2.105c-6.102 0-12.222-.238-18.334.238a13.995 13.995 0 0-6.102 2.105-12.222 2.105c-6.102 0-12.222-.238-18.334.238a13.995 13.995 0 0-6.102 2.105-12.222 2.105c-6.102 0-12.222-.238-18.334.238a13.995 13.995 0 0-6.102 2.10......<think>
